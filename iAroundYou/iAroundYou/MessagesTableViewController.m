@@ -7,9 +7,17 @@
 //
 
 #import "MessagesTableViewController.h"
+#import "SBJson.h"
 
+@interface MessagesTableViewController() 
+@property(nonatomic, weak) NSArray *messagesArray;    
+-(void)loadData;
+@end
 
 @implementation MessagesTableViewController
+
+@synthesize messagesArray = _messagesArray;
+
 
 //-(void)awakeFromNib
 //{
@@ -42,7 +50,9 @@
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self  action:nil];
+    //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self  action:nil];
+    
+    [self loadData];
 }
 
 - (void)viewDidUnload
@@ -80,30 +90,44 @@
 
 #pragma mark - Table view data source
 
+-(void)loadData
+{
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://aroundyou.com/api/messages"]];
+    
+    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSString *jsonMessages = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    
+    self.messagesArray = [parser objectWithString:jsonMessages error:nil];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
+    //#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
+    //#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return [self.messagesArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"MessageCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    // Configure the cell...
+    NSDictionary *message = [self.messagesArray objectAtIndex:indexPath.row];
+    cell.textLabel.numberOfLines = 2;
+    cell.textLabel.text = (NSString *)[message objectForKey:@"content"];
     
     return cell;
 }
