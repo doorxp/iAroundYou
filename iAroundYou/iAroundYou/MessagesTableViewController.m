@@ -7,7 +7,7 @@
 //
 
 #import "MessagesTableViewController.h"
-#import "SBJson.h"
+#import "JSONKit.h"
 
 @interface MessagesTableViewController() 
 @property(nonatomic, weak) NSArray *messagesArray;    
@@ -92,14 +92,16 @@
 
 -(void)loadData
 {
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    
+//    SBJsonParser *parser = [[SBJsonParser alloc] init];
+//    
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://aroundyou.com/api/messages"]];
-    
+//    
     NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *jsonMessages = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    //NSString *jsonMessages = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
     
-    self.messagesArray = [parser objectWithString:jsonMessages error:nil];
+    JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+    
+    self.messagesArray = [decoder objectWithData:response];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

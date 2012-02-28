@@ -21,6 +21,7 @@
 		6534B10B14F216E300378A01 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6534B0F214F216E300378A01 /* Foundation.framework */; };
 		6534B11314F216E300378A01 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6534B11114F216E300378A01 /* InfoPlist.strings */; };
 		6534B11614F216E300378A01 /* iAroundYouTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6534B11514F216E300378A01 /* iAroundYouTests.m */; };
+		654AFFCC14FC85F00072835E /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 654AFFB314FC84070072835E /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		658C5C6F14FA6A7D007236B5 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 658C5C6E14FA6A7D007236B5 /* Message.m */; };
 		658C5C7614FA8B28007236B5 /* MessageAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 658C5C7514FA8B28007236B5 /* MessageAddViewController.m */; };
 /* End PBXBuildFile section */
@@ -57,6 +58,8 @@
 		6534B11214F216E300378A01 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6534B11414F216E300378A01 /* iAroundYouTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iAroundYouTests.h; sourceTree = "<group>"; };
 		6534B11514F216E300378A01 /* iAroundYouTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iAroundYouTests.m; sourceTree = "<group>"; };
+		654AFFB214FC84070072835E /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		654AFFB314FC84070072835E /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		658C5C6D14FA6A7D007236B5 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		658C5C6E14FA6A7D007236B5 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		658C5C7414FA8B27007236B5 /* MessageAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageAddViewController.h; sourceTree = "<group>"; };
@@ -120,6 +123,7 @@
 		6534B0F614F216E300378A01 /* iAroundYou */ = {
 			isa = PBXGroup;
 			children = (
+				654AFFB014FC84070072835E /* JSONKit */,
 				658C5C6C14FA6A6A007236B5 /* Models */,
 				6534B0FF14F216E300378A01 /* AppDelegate.h */,
 				6534B10014F216E300378A01 /* AppDelegate.m */,
@@ -163,6 +167,16 @@
 				6534B11114F216E300378A01 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		654AFFB014FC84070072835E /* JSONKit */ = {
+			isa = PBXGroup;
+			children = (
+				654AFFB214FC84070072835E /* JSONKit.h */,
+				654AFFB314FC84070072835E /* JSONKit.m */,
+			);
+			name = JSONKit;
+			path = ../../../../JSONKit;
 			sourceTree = "<group>";
 		};
 		658C5C6C14FA6A6A007236B5 /* Models */ = {
@@ -280,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				654AFFCC14FC85F00072835E /* JSONKit.m in Sources */,
 				6534B0FD14F216E300378A01 /* main.m in Sources */,
 				6534B10114F216E300378A01 /* AppDelegate.m in Sources */,
 				6526E8CC14F66D13007F6BDC /* MainViewController.m in Sources */,
