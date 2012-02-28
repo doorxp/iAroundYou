@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ASIHTTPRequestDelegate.h"
 
-@interface MessagesTableViewController : UITableViewController
+@interface MessagesTableViewController : UITableViewController<ASIHTTPRequestDelegate>
 
 @end

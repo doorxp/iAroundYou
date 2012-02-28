@@ -8,6 +8,7 @@
 
 #import "MessagesTableViewController.h"
 #import "JSONKit.h"
+#import "ASIHTTPRequest.h"
 
 @interface MessagesTableViewController() 
 @property(nonatomic, weak) NSArray *messagesArray;    
@@ -92,16 +93,40 @@
 
 -(void)loadData
 {
-//    SBJsonParser *parser = [[SBJsonParser alloc] init];
-//    
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://aroundyou.com/api/messages"]];
-//    
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    //NSString *jsonMessages = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
     
+    NSURL *url = [NSURL URLWithString:@"http://localhost/api/messages"];    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    //[request setDelegate:self];
+    //[request startAsynchronous];
+    
+    [request startSynchronous];
+    NSError *error = [request error];
+    if (!error) {
+        NSData *response = [request responseData];
+        JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+        
+        self.messagesArray = [decoder objectWithData:response];
+    }
+    else {
+        NSLog(@"%@", error);
+    }
+}
+
+-(void)requestFinished:(ASIHTTPRequest *)request
+{
+    NSData *response = [request responseData];
     JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
     
     self.messagesArray = [decoder objectWithData:response];
+    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+    
+}
+
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    
+    NSLog(@"%@", error);
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
