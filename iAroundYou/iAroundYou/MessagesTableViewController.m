@@ -17,8 +17,8 @@
 
 @implementation MessagesTableViewController
 
-@synthesize messagesArray = _messagesArray;
 
+@synthesize messagesArray = _messagesArray;
 
 //-(void)awakeFromNib
 //{
@@ -53,11 +53,12 @@
     
     //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self  action:nil];
     
-    [self loadData];
+    
 }
 
 - (void)viewDidUnload
 {
+    [self setTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -66,6 +67,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self loadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -98,18 +100,43 @@
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     //[request setDelegate:self];
     //[request startAsynchronous];
+//    NSURLRequest *request = [NSURLRequest requestWithURL:url
+//                                             cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:2.0];
     
-    [request startSynchronous];
-    NSError *error = [request error];
-    if (!error) {
-        NSData *response = [request responseData];
+//    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+//    JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+//    
+//    self.messagesArray = [decoder objectWithData:response];
+//    [self.tableView reloadData]; 
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    //NSError *error;
+    
+    dispatch_async(queue, ^(void){
+        [request startSynchronous]; 
+        //NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
         JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
         
-        self.messagesArray = [decoder objectWithData:response];
-    }
-    else {
-        NSLog(@"%@", error);
-    }
+        self.messagesArray = [decoder objectWithData:[request responseData]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            //self.messagesArray = [decoder objectWithData:response];
+            NSLog(@"%d", [self.messagesArray count]);
+            [[self tableView] reloadData]; 
+        });
+    });
+//    [request startSynchronous];
+//    NSError *error = [request error];
+//    if (!error) {
+//        NSData *response = [request responseData];
+//        JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+//        
+//        self.messagesArray = [decoder objectWithData:response];
+//    }
+//    else {
+//        NSLog(@"%@", error);
+//    }
 }
 
 -(void)requestFinished:(ASIHTTPRequest *)request
@@ -118,7 +145,7 @@
     JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
     
     self.messagesArray = [decoder objectWithData:response];
-    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+    [self.tableView reloadData];
     
 }
 
@@ -140,6 +167,7 @@
 {
     //#warning Incomplete method implementation.
     // Return the number of rows in the section.
+    NSLog(@"%d", [self.messagesArray count]);
     return [self.messagesArray count];
 }
 
@@ -155,6 +183,8 @@
     NSDictionary *message = [self.messagesArray objectAtIndex:indexPath.row];
     cell.textLabel.numberOfLines = 2;
     cell.textLabel.text = (NSString *)[message objectForKey:@"content"];
+    
+    NSLog(@"%@", [message objectForKey:@"content"]);
     
     return cell;
 }
