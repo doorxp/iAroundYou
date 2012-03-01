@@ -7,8 +7,12 @@
 //
 
 #import "MessageAddViewController.h"
+#import "ASIFormDataRequest.h"
 
 @implementation MessageAddViewController
+
+@synthesize btnDone;
+@synthesize messageContent;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -46,6 +50,8 @@
 
 - (void)viewDidUnload
 {
+    [self setBtnDone:nil];
+    [self setMessageContent:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -59,5 +65,18 @@
 
 - (IBAction)dismiss:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (IBAction)addMessage:(UIBarButtonItem *)sender {
+    
+    ASIFormDataRequest *formRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://192.168.0.101/api/messages"]];
+    [formRequest setPostValue:@"7" forKey:@"user_id"];
+    [formRequest setPostValue:self.messageContent.text forKey:@"content"];
+    [formRequest startSynchronous];
+    NSError *error = [formRequest error];
+    if (error) {
+        NSLog(@"%@", error);
+    }
+    
 }
 @end

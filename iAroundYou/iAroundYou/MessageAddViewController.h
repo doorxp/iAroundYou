@@ -10,6 +10,11 @@
 
 @interface MessageAddViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *btnDone;
+@property (weak, nonatomic) IBOutlet UITextView *messageContent;
+
 - (IBAction)dismiss:(id)sender;
+
+- (IBAction)addMessage:(UIBarButtonItem *)sender;
 
 @end

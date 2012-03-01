@@ -11,7 +11,7 @@
 #import "ASIHTTPRequest.h"
 
 @interface MessagesTableViewController() 
-@property(nonatomic, weak) NSArray *messagesArray;    
+@property(nonatomic, strong) NSArray *messagesArray;    
 -(void)loadData;
 @end
 
@@ -96,7 +96,7 @@
 -(void)loadData
 {
     
-    NSURL *url = [NSURL URLWithString:@"http://localhost/api/messages"];    
+    NSURL *url = [NSURL URLWithString:@"http://192.168.0.101/api/messages"];    
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     //[request setDelegate:self];
     //[request startAsynchronous];
@@ -122,10 +122,10 @@
         
         dispatch_async(dispatch_get_main_queue(), ^(void){
             //self.messagesArray = [decoder objectWithData:response];
-            NSLog(@"%d", [self.messagesArray count]);
             [[self tableView] reloadData]; 
         });
     });
+    dispatch_release(queue);
 //    [request startSynchronous];
 //    NSError *error = [request error];
 //    if (!error) {
@@ -167,7 +167,7 @@
 {
     //#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    NSLog(@"%d", [self.messagesArray count]);
+
     return [self.messagesArray count];
 }
 
