@@ -11,5 +11,6 @@
 
 @interface MessagesTableViewController : CoreDataTableViewController
 
+- (IBAction)loadLatestMessages:(UIBarButtonItem *)sender;
 
 @end

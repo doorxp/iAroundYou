@@ -29,7 +29,7 @@
     if (!matches || [matches count] > 1) {
         NSLog(@"more than one user with id = %@ existed", [userInfo objectForKey:USER_ID]);
     }
-    else if(![matches count]){
+    else if([matches count] == 0){
         user = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:context];
         NSString * userId = [userInfo objectForKey:USER_ID];
         NSNumberFormatter * f = [[NSNumberFormatter alloc] init];

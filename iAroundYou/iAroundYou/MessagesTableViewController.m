@@ -10,6 +10,7 @@
 #import "JSONKit.h"
 #import "ASIHTTPRequest.h"
 #import "Message+Load.h"
+#import "User.h"
 
 @interface MessagesTableViewController() 
 @property(nonatomic, strong) UIManagedDocument *messageDatabase;
@@ -28,7 +29,7 @@
     self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.messageDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
 }
 
--(void)fetchMessageDataIntoDocument:(UIManagedDocument *)document
+-(void)fetchMessageDataIntoDocument:(UIManagedDocument *)document 
 {
     dispatch_queue_t fetchQ = dispatch_queue_create("Message Fetch", NULL);
     dispatch_async(fetchQ, ^{
@@ -158,7 +159,7 @@
     Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
     //cell.textLabel.numberOfLines = 2;
     cell.textLabel.text = message.content;
-    cell.detailTextLabel.text = message.postedTime;
+    cell.detailTextLabel.text = message.whoMessage.name;
 
     return cell;
 }
@@ -203,4 +204,26 @@
 */
 
 
+- (IBAction)loadLatestMessages:(UIBarButtonItem *)sender {
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [indicator startAnimating];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:indicator];
+    
+    dispatch_queue_t fetchQ = dispatch_queue_create("Message Refresh", NULL);
+    dispatch_async(fetchQ, ^{
+        NSArray *messages = [Message loadMessages];
+        [self.messageDatabase.managedObjectContext performBlock:^{
+            for (NSDictionary *message in messages){
+                [Message messageWithLoadedInfo:message inManagedObjectContext:self.messageDatabase.managedObjectContext];
+            }
+        }];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.navigationItem.rightBarButtonItem = sender;
+        });
+    });
+    
+    dispatch_release(fetchQ);
+}
 @end

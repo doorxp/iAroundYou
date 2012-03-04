@@ -20,7 +20,7 @@
 +(NSArray *)loadMessages
 {
     NSLog(@"start loading data");
-    NSURL *url = [NSURL URLWithString:@"http://localhost/api/messages"];    
+    NSURL *url = [NSURL URLWithString:@"http://192.168.0.101/api/messages"];    
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
         
     [request startSynchronous]; 
@@ -38,7 +38,7 @@
     Message *message = nil;
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Message"];
-    request.predicate = [NSPredicate predicateWithFormat:@"messageId = %@", [messageInfo objectForKey:MESSAGE_ID]];
+    request.predicate = [NSPredicate predicateWithFormat:@"messageId = %d", [[messageInfo objectForKey:MESSAGE_ID] intValue]];
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"postedTime" ascending:NO];
     request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     
@@ -48,7 +48,7 @@
     if (!matches || [matches count] > 1) {
         NSLog(@"more than one message with id:%@ exists, error", [messageInfo objectForKey:MESSAGE_ID]);
     }
-    else if(![matches count]){
+    else if([matches count] == 0){
         message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
         NSString *messageId = [messageInfo valueForKey:MESSAGE_ID];
         NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
