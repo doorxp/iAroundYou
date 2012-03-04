@@ -14,6 +14,36 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Message Cell" textLabel="jDa-bL-XkJ" detailTextLabel="Tjw-jn-FBF" style="IBUITableViewCellStyleSubtitle" id="fWb-aJ-OuR">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" id="jDa-bL-XkJ">
+                                            <rect key="frame" x="10" y="2" width="38" height="22"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" id="Tjw-jn-FBF">
+                                            <rect key="frame" x="10" y="24" width="47" height="18"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" red="0.50196078431372548" green="0.50196078431372548" blue="0.50196078431372548" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <connections>
+                                    <segue destination="w94-Ll-KaL" kind="push" id="RGT-Eo-Oyq"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="n6u-2D-SFi" id="wR1-n0-RW5"/>
                             <outlet property="delegate" destination="n6u-2D-SFi" id="Ptu-zk-oNH"/>
@@ -37,6 +67,21 @@
                 </tableViewController>
             </objects>
             <point key="canvasLocation" x="1001" y="-229"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="epZ-4A-8pI">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2IU-Gd-Isb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="w94-Ll-KaL" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eWc-pj-znn">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="DYX-Ul-jPs"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1545" y="-7"/>
         </scene>
         <!--View Controller - Item 2-->
         <scene sceneID="K57-Cj-2FU">
@@ -90,7 +135,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1473" y="-229"/>
+            <point key="canvasLocation" x="1545" y="-604"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="GLm-Up-2Pr">
@@ -131,6 +176,29 @@
             <point key="canvasLocation" x="544" y="-229"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="CoreDataTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CoreDataTableViewController.h"/>
+        </class>
+        <class className="MainViewController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MainViewController.h"/>
+        </class>
+        <class className="MessageAddViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageAddViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addMessage:" candidateClass="UIBarButtonItem"/>
+                <relationship kind="action" name="dismiss:"/>
+                <relationship kind="outlet" name="btnDone" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="messageContent" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="MessagesTableViewController" superclassName="CoreDataTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessagesTableViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="loadLatestMessages:" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
