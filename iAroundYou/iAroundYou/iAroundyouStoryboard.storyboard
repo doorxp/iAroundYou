@@ -133,6 +133,9 @@
         </scene>
     </scenes>
     <classes>
+        <class className="CoreDataTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CoreDataTableViewController.h"/>
+        </class>
         <class className="MainViewController" superclassName="UITabBarController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MainViewController.h"/>
         </class>
@@ -145,7 +148,7 @@
                 <relationship kind="outlet" name="messageContent" candidateClass="UITextView"/>
             </relationships>
         </class>
-        <class className="MessagesTableViewController" superclassName="UITableViewController">
+        <class className="MessagesTableViewController" superclassName="CoreDataTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MessagesTableViewController.h"/>
         </class>
     </classes>

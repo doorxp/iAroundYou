@@ -9,21 +9,77 @@
 #import "MessagesTableViewController.h"
 #import "JSONKit.h"
 #import "ASIHTTPRequest.h"
+#import "Message+Load.h"
 
 @interface MessagesTableViewController() 
-@property(nonatomic, strong) NSArray *messagesArray;    
--(void)loadData;
+@property(nonatomic, strong) UIManagedDocument *messageDatabase;
+
+-(void)useDocument;
 @end
 
 @implementation MessagesTableViewController
 
+@synthesize messageDatabase = _messageDatabase;
 
-@synthesize messagesArray = _messagesArray;
+-(void)setupFetchedResultsController
+{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Message"];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"postedTime" ascending:NO]];
+    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.messageDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+}
 
-//-(void)awakeFromNib
-//{
-//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self  action:nil];
-//}
+-(void)fetchMessageDataIntoDocument:(UIManagedDocument *)document
+{
+    dispatch_queue_t fetchQ = dispatch_queue_create("Message Fetch", NULL);
+    dispatch_async(fetchQ, ^{
+        NSArray *messages = [Message loadMessages];
+        [document.managedObjectContext performBlock:^{
+            for (NSDictionary *message in messages){
+                [Message messageWithLoadedInfo:message inManagedObjectContext:document.managedObjectContext];
+            }
+        }];
+    });
+    
+    dispatch_release(fetchQ);
+}
+
+-(void)useDocument
+{
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[self.messageDatabase.fileURL path]]) {
+        [self.messageDatabase saveToURL:self.messageDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
+            [self setupFetchedResultsController];
+            [self fetchMessageDataIntoDocument:self.messageDatabase];
+        }];
+    }
+    else if(self.messageDatabase.documentState == UIDocumentStateClosed)
+    {
+        [self.messageDatabase openWithCompletionHandler:^(BOOL successful){
+            [self setupFetchedResultsController];
+        }];
+    }
+}
+
+-(void)setMessageDatabase:(UIManagedDocument *)messageDatabase
+{
+    if (_messageDatabase != messageDatabase) {
+        _messageDatabase = messageDatabase;
+        [self useDocument];
+    }
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if(!self.messageDatabase)
+    {
+        NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+        
+        url = [url URLByAppendingPathComponent:@"Message Database"];
+        
+        self.messageDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+    }
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -64,12 +120,6 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self loadData];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -93,99 +143,23 @@
 
 #pragma mark - Table view data source
 
--(void)loadData
-{
-    
-    NSURL *url = [NSURL URLWithString:@"http://192.168.0.101/api/messages"];    
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    //[request setDelegate:self];
-    //[request startAsynchronous];
-//    NSURLRequest *request = [NSURLRequest requestWithURL:url
-//                                             cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:2.0];
-    
-//    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-//    JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
-//    
-//    self.messagesArray = [decoder objectWithData:response];
-//    [self.tableView reloadData]; 
-    
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    
-    //NSError *error;
-    
-    dispatch_async(queue, ^(void){
-        [request startSynchronous]; 
-        //NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
-        JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
-        
-        self.messagesArray = [decoder objectWithData:[request responseData]];
-        
-        dispatch_async(dispatch_get_main_queue(), ^(void){
-            //self.messagesArray = [decoder objectWithData:response];
-            [[self tableView] reloadData]; 
-        });
-    });
-    dispatch_release(queue);
-//    [request startSynchronous];
-//    NSError *error = [request error];
-//    if (!error) {
-//        NSData *response = [request responseData];
-//        JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
-//        
-//        self.messagesArray = [decoder objectWithData:response];
-//    }
-//    else {
-//        NSLog(@"%@", error);
-//    }
-}
 
--(void)requestFinished:(ASIHTTPRequest *)request
-{
-    NSData *response = [request responseData];
-    JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
-    
-    self.messagesArray = [decoder objectWithData:response];
-    [self.tableView reloadData];
-    
-}
 
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    NSError *error = [request error];
-    
-    NSLog(@"%@", error);
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-
-    return [self.messagesArray count];
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"MessageCell";
+    static NSString *CellIdentifier = @"Message Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-    NSDictionary *message = [self.messagesArray objectAtIndex:indexPath.row];
-    cell.textLabel.numberOfLines = 2;
-    cell.textLabel.text = (NSString *)[message objectForKey:@"content"];
-    
-    NSLog(@"%@", [message objectForKey:@"content"]);
-    
+    Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    //cell.textLabel.numberOfLines = 2;
+    cell.textLabel.text = message.content;
+    cell.detailTextLabel.text = message.postedTime;
+
     return cell;
 }
 
@@ -228,17 +202,5 @@
 }
 */
 
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
-}
 
 @end

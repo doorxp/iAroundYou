@@ -9,13 +9,13 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "iAroundYou/MessagesTableViewController.m"
-         timestampString = "352198902.822599"
+         timestampString = "352537563.010991"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "32"
-         endingLineNumber = "32"
-         landmarkName = "-initWithStyle:"
-         landmarkType = "5">
+         startingLineNumber = "30"
+         endingLineNumber = "30"
+         landmarkName = "@implementation MessagesTableViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -32,17 +32,16 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "iAroundYou/MessagesTableViewController.m"
-         timestampString = "352315380.801988"
+         filePath = "iAroundYou/Message+Load.m"
+         timestampString = "352542995.529718"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "171"
-         endingLineNumber = "171"
-         landmarkName = "-tableView:numberOfRowsInSection:"
+         startingLineNumber = "28"
+         endingLineNumber = "28"
+         landmarkName = "+loadMessages"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
