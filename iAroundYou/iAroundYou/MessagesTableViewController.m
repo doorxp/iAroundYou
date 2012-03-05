@@ -157,8 +157,23 @@
     }
     
     Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    //cell.textLabel.numberOfLines = 2;
+    cell.textLabel.numberOfLines = 0;
+    cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+    
+//    UILabel *label = cell.textLabel;
+//    
+//    CGSize expectedLabelSize = [message.content sizeWithFont:[UIFont fontWithName:@"Helvetica" size:17]
+//                                      constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)
+//                                          lineBreakMode:UILineBreakModeWordWrap];
+//    
+//    CGRect newFrame = label.frame;
+//    newFrame.size.height = expectedLabelSize.height;
+//    NSLog(@"%@", expectedLabelSize.height);
+//    newFrame.size.width = 300;
+//    label.frame = newFrame;
+    
     cell.textLabel.text = message.content;
+    [cell.textLabel sizeToFit];
     cell.detailTextLabel.text = message.whoMessage.name;
 
     return cell;
@@ -172,7 +187,7 @@
     return YES;
 }
 */
-
+;
 /*
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -202,6 +217,19 @@
     return YES;
 }
 */
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    Message *message = (Message *)[self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    
+    CGSize expectedLabelSize = [message.content sizeWithFont:[UIFont fontWithName:@"Helvetica" size:17]
+                                           constrainedToSize:CGSizeMake(286, 300)
+                                               lineBreakMode:UILineBreakModeWordWrap];
+    NSLog(@"%f", expectedLabelSize.height);
+    
+    return expectedLabelSize.height + 11 + 21;
+}
 
 
 - (IBAction)loadLatestMessages:(UIBarButtonItem *)sender {
