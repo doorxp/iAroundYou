@@ -11,6 +11,7 @@
 #import "ASIHTTPRequest.h"
 #import "Message+Load.h"
 #import "User.h"
+#import "MessageDetailViewController.h"
 
 @interface MessagesTableViewController() 
 @property(nonatomic, strong) UIManagedDocument *messageDatabase;
@@ -258,7 +259,12 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    
+    if ([segue.destinationViewController respondsToSelector:@selector(setDetailMessage:)]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        
+        Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        [segue.destinationViewController setDetailMessage:message];
+    }
 }
 
 @end

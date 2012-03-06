@@ -20,7 +20,7 @@
 +(NSArray *)loadMessages
 {
     NSLog(@"start loading data");
-    NSURL *url = [NSURL URLWithString:@"http://192.168.0.101/api/messages"];    
+    NSURL *url = [NSURL URLWithString:@"http://iaroundyou.com/api/messages"];    
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
         
     [request startSynchronous]; 

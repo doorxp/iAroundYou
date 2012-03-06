@@ -26,6 +26,7 @@
 		6585F72F150339890074CFA2 /* iAroundYouModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6585F72D150339890074CFA2 /* iAroundYouModel.xcdatamodeld */; };
 		6585F73E15033E180074CFA2 /* Message+Load.m in Sources */ = {isa = PBXBuildFile; fileRef = 6585F73D15033E180074CFA2 /* Message+Load.m */; };
 		6585F741150343F60074CFA2 /* User+Load.m in Sources */ = {isa = PBXBuildFile; fileRef = 6585F740150343F60074CFA2 /* User+Load.m */; };
+		65887DD51506178100C72623 /* MessageDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65887DD41506178100C72623 /* MessageDetailViewController.m */; };
 		658C5C7614FA8B28007236B5 /* MessageAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 658C5C7514FA8B28007236B5 /* MessageAddViewController.m */; };
 		659BB5521503537600153C0A /* Region.m in Sources */ = {isa = PBXBuildFile; fileRef = 659BB5511503537600153C0A /* Region.m */; };
 		659BB5551503537600153C0A /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 659BB5541503537600153C0A /* Message.m */; };
@@ -87,6 +88,8 @@
 		6585F73D15033E180074CFA2 /* Message+Load.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Message+Load.m"; sourceTree = "<group>"; };
 		6585F73F150343F60074CFA2 /* User+Load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "User+Load.h"; sourceTree = "<group>"; };
 		6585F740150343F60074CFA2 /* User+Load.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "User+Load.m"; sourceTree = "<group>"; };
+		65887DD31506178100C72623 /* MessageDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageDetailViewController.h; sourceTree = "<group>"; };
+		65887DD41506178100C72623 /* MessageDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageDetailViewController.m; sourceTree = "<group>"; };
 		658C5C7414FA8B27007236B5 /* MessageAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageAddViewController.h; sourceTree = "<group>"; };
 		658C5C7514FA8B28007236B5 /* MessageAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageAddViewController.m; sourceTree = "<group>"; };
 		659BB5501503537600153C0A /* Region.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Region.h; sourceTree = "<group>"; };
@@ -219,6 +222,8 @@
 				6526E8CB14F66D13007F6BDC /* MainViewController.m */,
 				6526E8D514F67346007F6BDC /* MessagesTableViewController.h */,
 				6526E8D614F67346007F6BDC /* MessagesTableViewController.m */,
+				65887DD31506178100C72623 /* MessageDetailViewController.h */,
+				65887DD41506178100C72623 /* MessageDetailViewController.m */,
 				658C5C7414FA8B27007236B5 /* MessageAddViewController.h */,
 				658C5C7514FA8B28007236B5 /* MessageAddViewController.m */,
 			);
@@ -446,6 +451,7 @@
 				659BB5551503537600153C0A /* Message.m in Sources */,
 				659BB5581503537600153C0A /* User.m in Sources */,
 				659BB55B1503537700153C0A /* Comment.m in Sources */,
+				65887DD51506178100C72623 /* MessageDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

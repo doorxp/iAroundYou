@@ -1,18 +1,16 @@
 //
-//  MessageAddViewController.m
+//  MessageDetailViewController.m
 //  iAroundYou
 //
-//  Created by 琦钧 冯 on 2/26/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by 琦钧 冯 on 12-3-6.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
 
-#import "MessageAddViewController.h"
-#import "ASIFormDataRequest.h"
+#import "MessageDetailViewController.h"
 
-@implementation MessageAddViewController
-
-@synthesize btnDone;
-@synthesize messageContent;
+@implementation MessageDetailViewController
+@synthesize lblMessage;
+@synthesize detailMessage;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,18 +38,20 @@
 }
 */
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.lblMessage.numberOfLines = 0;
+    self.lblMessage.text = detailMessage.content;
+    [self.lblMessage sizeToFit];
 }
-*/
+
 
 - (void)viewDidUnload
 {
-    [self setBtnDone:nil];
-    [self setMessageContent:nil];
+    [self setLblMessage:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -63,20 +63,4 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (IBAction)dismiss:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-- (IBAction)addMessage:(UIBarButtonItem *)sender {
-    
-    ASIFormDataRequest *formRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://iaroundyou.com/api/messages"]];
-    [formRequest setPostValue:@"7" forKey:@"user_id"];
-    [formRequest setPostValue:self.messageContent.text forKey:@"content"];
-    [formRequest startSynchronous];
-    NSError *error = [formRequest error];
-    if (error) {
-        NSLog(@"%@", error);
-    }
-    
-}
 @end
