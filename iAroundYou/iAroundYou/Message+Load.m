@@ -8,8 +8,11 @@
 
 #import "Message+Load.h"
 #import "ASIHTTPRequest.h"
+#import "ASIFormDataRequest.h"
 #import "JSONKit.h"
 #import "User+Load.h"
+
+#define SITE_URL @"http://iaroundyou.com/"
 
 #define MESSAGE_ID @"message_id"
 #define MESSAGE_CONTENT @"content"
@@ -17,20 +20,43 @@
 
 @implementation Message (Load)
 
++(void)post:(NSString *)message location:(CLLocation *)location;
+{
+    ASIFormDataRequest *formRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[SITE_URL stringByAppendingString: @"/api/messages"]]];
+    [formRequest setPostValue:@"10" forKey:@"user_id"];
+    [formRequest setPostValue:message forKey:@"content"];
+    [formRequest startSynchronous];
+    NSError *error = [formRequest error];
+    if (error) {
+        NSLog(@"%@", error);
+    }else {
+        NSLog(@"post complete");
+    }
+}
+
 +(NSArray *)loadMessages
 {
     NSLog(@"start loading data");
-    NSURL *url = [NSURL URLWithString:@"http://iaroundyou.com/api/messages"];    
+    NSURL *url = [NSURL URLWithString: @"http://iaroundyou.com/api/messages"];    
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
         
     [request startSynchronous]; 
-    //NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
-    JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+    NSError *error = [request error];
     
-    NSArray *messages = [decoder objectWithData:[request responseData]];
-    NSLog(@"load complete");
-    NSLog(@"load %d message", [messages count]);
-    return messages;
+    if (!error) {
+        //NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+        JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+        
+        NSArray *messages = [decoder objectWithData:[request responseData]];
+        NSLog(@"load complete");
+        NSLog(@"load %d message", [messages count]);
+        return messages;
+
+    }
+    else {
+        NSLog(@"%@", error );
+        return nil;
+    }
 }
 
 +(Message *)messageWithLoadedInfo:(NSDictionary *)messageInfo inManagedObjectContext:(NSManagedObjectContext *)context

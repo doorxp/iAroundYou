@@ -7,10 +7,12 @@
 //
 
 #import "Message.h"
+#import <CoreLocation/CLLocation.h>
 
 @interface Message (Load)
 
 +(NSArray *)loadMessages;
++(void)post:(NSString *)message location:(CLLocation *)location;
 +(Message *)messageWithLoadedInfo:(NSDictionary *)messageInfo
            inManagedObjectContext:(NSManagedObjectContext *)context;
 @end

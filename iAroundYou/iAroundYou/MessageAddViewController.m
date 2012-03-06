@@ -7,7 +7,7 @@
 //
 
 #import "MessageAddViewController.h"
-#import "ASIFormDataRequest.h"
+#import "Message+Load.h"
 
 @implementation MessageAddViewController
 
@@ -69,14 +69,7 @@
 
 - (IBAction)addMessage:(UIBarButtonItem *)sender {
     
-    ASIFormDataRequest *formRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"http://iaroundyou.com/api/messages"]];
-    [formRequest setPostValue:@"7" forKey:@"user_id"];
-    [formRequest setPostValue:self.messageContent.text forKey:@"content"];
-    [formRequest startSynchronous];
-    NSError *error = [formRequest error];
-    if (error) {
-        NSLog(@"%@", error);
-    }
+    [Message post:self.messageContent.text location:nil];
     
 }
 @end
