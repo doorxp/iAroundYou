@@ -46,4 +46,27 @@
 
 }
 
++(User *)userWithUserId:(NSNumber *)userId inManagedContext:(NSManagedObjectContext *)context
+{
+    User *user = nil;
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"User"];
+    request.predicate = [NSPredicate predicateWithFormat:@"userId = %@", userId];
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO];
+    request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    
+    NSError *error = nil;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    
+    if (!error) 
+    {
+        user = [matches lastObject];
+        return user;
+    }
+    else
+    {
+        NSLog(@"%@", error);
+        return nil;
+    }
+}
+
 @end

@@ -11,5 +11,6 @@
 @interface User (Load)
 
 +(User *)userWithLoadedInfo:(NSDictionary *)userInfo inManagedContext:(NSManagedObjectContext *)context;
++(User *)userWithUserId:(NSNumber *)userId inManagedContext:(NSManagedObjectContext *)context;
 
 @end

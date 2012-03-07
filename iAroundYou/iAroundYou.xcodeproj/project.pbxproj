@@ -21,6 +21,7 @@
 		6534B10B14F216E300378A01 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6534B0F214F216E300378A01 /* Foundation.framework */; };
 		6534B11314F216E300378A01 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6534B11114F216E300378A01 /* InfoPlist.strings */; };
 		6534B11614F216E300378A01 /* iAroundYouTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6534B11514F216E300378A01 /* iAroundYouTests.m */; };
+		6557F60A15074B9100504EC2 /* User+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 6557F60915074B9100504EC2 /* User+Image.m */; };
 		6585F728150330DD0074CFA2 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6585F727150330DD0074CFA2 /* CoreData.framework */; };
 		6585F72C150337D40074CFA2 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6585F72B150337D40074CFA2 /* CoreDataTableViewController.m */; };
 		6585F72F150339890074CFA2 /* iAroundYouModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6585F72D150339890074CFA2 /* iAroundYouModel.xcdatamodeld */; };
@@ -80,6 +81,8 @@
 		6534B11214F216E300378A01 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6534B11414F216E300378A01 /* iAroundYouTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iAroundYouTests.h; sourceTree = "<group>"; };
 		6534B11514F216E300378A01 /* iAroundYouTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iAroundYouTests.m; sourceTree = "<group>"; };
+		6557F60815074B9100504EC2 /* User+Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "User+Image.h"; sourceTree = "<group>"; };
+		6557F60915074B9100504EC2 /* User+Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "User+Image.m"; sourceTree = "<group>"; };
 		6585F727150330DD0074CFA2 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		6585F72A150337D40074CFA2 /* CoreDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataTableViewController.h; sourceTree = "<group>"; };
 		6585F72B150337D40074CFA2 /* CoreDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
@@ -201,6 +204,8 @@
 				659BB5591503537700153C0A /* Comment.h */,
 				659BB55A1503537700153C0A /* Comment.m */,
 				659BB5561503537600153C0A /* User.h */,
+				6557F60815074B9100504EC2 /* User+Image.h */,
+				6557F60915074B9100504EC2 /* User+Image.m */,
 				659BB5571503537600153C0A /* User.m */,
 				659BB5531503537600153C0A /* Message.h */,
 				659BB5541503537600153C0A /* Message.m */,
@@ -452,6 +457,7 @@
 				659BB5581503537600153C0A /* User.m in Sources */,
 				659BB55B1503537700153C0A /* Comment.m in Sources */,
 				65887DD51506178100C72623 /* MessageDetailViewController.m in Sources */,
+				6557F60A15074B9100504EC2 /* User+Image.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

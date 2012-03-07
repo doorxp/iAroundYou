@@ -10,11 +10,13 @@
 #import "JSONKit.h"
 #import "ASIHTTPRequest.h"
 #import "Message+Load.h"
-#import "User.h"
+#import "User+Load.h"
+#import "User+Image.h"
 #import "MessageDetailViewController.h"
 
 @interface MessagesTableViewController() 
 @property(nonatomic, strong) UIManagedDocument *messageDatabase;
+@property dispatch_queue_t imageLoadQueue;
 
 -(void)useDocument;
 @end
@@ -22,6 +24,17 @@
 @implementation MessagesTableViewController
 
 @synthesize messageDatabase = _messageDatabase;
+@synthesize imageLoadQueue = _imageLoadQueue;
+
+-(dispatch_queue_t)imageLoadQueue
+{
+    if (_imageLoadQueue == NULL) {
+        _imageLoadQueue = dispatch_queue_create("image_load_queue", NULL);
+    }
+    
+    return _imageLoadQueue;
+}
+
 
 -(void)setupFetchedResultsController
 {
@@ -160,19 +173,28 @@
     Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.numberOfLines = 0;
     cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+
+    User *user = [User userWithUserId:message.whoMessage.userId inManagedContext:message.managedObjectContext];
     
-//    UILabel *label = cell.textLabel;
-//    
-//    CGSize expectedLabelSize = [message.content sizeWithFont:[UIFont fontWithName:@"Helvetica" size:17]
-//                                      constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)
-//                                          lineBreakMode:UILineBreakModeWordWrap];
-//    
-//    CGRect newFrame = label.frame;
-//    newFrame.size.height = expectedLabelSize.height;
-//    NSLog(@"%@", expectedLabelSize.height);
-//    newFrame.size.width = 300;
-//    label.frame = newFrame;
-    
+    if(user.profileImage == nil)
+    {
+        dispatch_queue_t imageQ = dispatch_queue_create("imageQ", NULL);
+        dispatch_
+        dispatch_async(imageQ, ^{
+            [user loadImage];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                cell.imageView.image = user.profileImage;
+            });
+
+            
+        });
+    }
+    else
+    {
+        cell.imageView.image = user.profileImage;
+    }
     cell.textLabel.text = message.content;
     [cell.textLabel sizeToFit];
     cell.detailTextLabel.text = message.whoMessage.name;
