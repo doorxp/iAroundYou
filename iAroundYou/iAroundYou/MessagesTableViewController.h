@@ -11,6 +11,7 @@
 
 @interface MessagesTableViewController : CoreDataTableViewController
 
+@property (nonatomic, strong) NSMutableDictionary *imageDownloadsInProgress;
 - (IBAction)loadLatestMessages:(UIBarButtonItem *)sender;
 
 @end

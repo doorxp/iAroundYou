@@ -13,10 +13,12 @@
 #import "User+Load.h"
 #import "User+Image.h"
 #import "MessageDetailViewController.h"
+#import "ImageDownloader.h"
 
-@interface MessagesTableViewController() 
+@interface MessagesTableViewController()<UserProfileImageDownloader>
 @property(nonatomic, strong) UIManagedDocument *messageDatabase;
-@property dispatch_queue_t imageLoadQueue;
+
+-(void)startUserProfileImageDownload:(User *)user forIndexPath:(NSIndexPath *)indexPath;
 
 -(void)useDocument;
 @end
@@ -24,16 +26,7 @@
 @implementation MessagesTableViewController
 
 @synthesize messageDatabase = _messageDatabase;
-@synthesize imageLoadQueue = _imageLoadQueue;
-
--(dispatch_queue_t)imageLoadQueue
-{
-    if (_imageLoadQueue == NULL) {
-        _imageLoadQueue = dispatch_queue_create("image_load_queue", NULL);
-    }
-    
-    return _imageLoadQueue;
-}
+@synthesize imageDownloadsInProgress = _imageDownloadsInProgress;
 
 
 -(void)setupFetchedResultsController
@@ -93,6 +86,10 @@
         url = [url URLByAppendingPathComponent:@"Message Database"];
         
         self.messageDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+    }
+    else
+    {
+        [self setupFetchedResultsController];
     }
 }
 
@@ -178,18 +175,8 @@
     
     if(user.profileImage == nil)
     {
-        dispatch_queue_t imageQ = dispatch_queue_create("imageQ", NULL);
-        dispatch_
-        dispatch_async(imageQ, ^{
-            [user loadImage];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                cell.imageView.image = user.profileImage;
-            });
-
-            
-        });
+        NSLog(@"file for user %d doesn't exist", [user.userId intValue]);
+        [self startUserProfileImageDownload:user forIndexPath:indexPath];
     }
     else
     {
@@ -254,6 +241,34 @@
     return expectedLabelSize.height + 11 + 21;
 }
 
+-(void)startUserProfileImageDownload:(User *)user forIndexPath:(NSIndexPath *)indexPath
+{
+    ImageDownloader *downloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    
+    if (downloader == nil) 
+    {
+        downloader = [[ImageDownloader alloc] init];
+        downloader.user = user;
+        downloader.indexPathInTableView = indexPath;
+        downloader.delegate = self;
+        [self.imageDownloadsInProgress setObject:downloader forKey:indexPath];
+        [downloader startDownload];
+    }
+
+}
+
+-(void)profileImageDidLoad:(NSIndexPath *)indexPath
+{
+        ImageDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+        if (iconDownloader != nil)
+        {
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
+            
+            // Display the newly loaded image
+            cell.imageView.image = iconDownloader.user.profileImage;
+        }
+    
+}
 
 - (IBAction)loadLatestMessages:(UIBarButtonItem *)sender {
     UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];

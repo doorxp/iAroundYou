@@ -8,10 +8,9 @@
 
 #import "User.h"
 
-@interface User (Image)
+@interface User (Image)<NSURLConnectionDelegate>
 
 -(UIImage *)profileImage;
-
 -(void)loadImage;
 
 @end
