@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "CoreDataTableViewController.h"
 
-@interface MessagesTableViewController : CoreDataTableViewController
+@interface MessagesTableViewController : CoreDataTableViewController<UIScrollViewDelegate>
 
 @property (nonatomic, strong) NSMutableDictionary *imageDownloadsInProgress;
+
 - (IBAction)loadLatestMessages:(UIBarButtonItem *)sender;
 
 @end

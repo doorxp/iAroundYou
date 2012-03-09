@@ -73,11 +73,15 @@
         _messageDatabase = messageDatabase;
         [self useDocument];
     }
+    
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    self.imageDownloadsInProgress = [NSMutableDictionary dictionary];
     
     if(!self.messageDatabase)
     {
@@ -175,8 +179,10 @@
     
     if(user.profileImage == nil)
     {
-        NSLog(@"file for user %d doesn't exist", [user.userId intValue]);
-        [self startUserProfileImageDownload:user forIndexPath:indexPath];
+        if (self.tableView.dragging == NO && self.tableView.decelerating == NO) {
+            NSLog(@"file for user %d doesn't exist", [user.userId intValue]);
+            [self startUserProfileImageDownload:user forIndexPath:indexPath];
+        }
     }
     else
     {
@@ -243,16 +249,23 @@
 
 -(void)startUserProfileImageDownload:(User *)user forIndexPath:(NSIndexPath *)indexPath
 {
-    ImageDownloader *downloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    ImageDownloader *downloader = [self.imageDownloadsInProgress objectForKey:user.userId];
     
     if (downloader == nil) 
     {
+        NSLog(@"profile image downloader for user with id: %@ ", user.userId);
         downloader = [[ImageDownloader alloc] init];
         downloader.user = user;
         downloader.indexPathInTableView = indexPath;
         downloader.delegate = self;
-        [self.imageDownloadsInProgress setObject:downloader forKey:indexPath];
+        [self.imageDownloadsInProgress setObject:downloader forKey:user.userId];
         [downloader startDownload];
+        
+        NSLog(@"loader threads count: %@",[self.imageDownloadsInProgress count]);
+    }
+    else
+    {
+        NSLog(@"profile image downloader for user with id: %@ exists", user.userId);
     }
 
 }
@@ -303,5 +316,42 @@
         [segue.destinationViewController setDetailMessage:message];
     }
 }
+
+// this method is used in case the user scrolled into a set of cells that don't have their app icons yet
+- (void)loadImagesForOnscreenRows
+{
+        
+    NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
+    for (NSIndexPath *indexPath in visiblePaths)
+    {
+        Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        
+        User *user = [User userWithUserId:message.whoMessage.userId inManagedContext:message.managedObjectContext];
+        if (!user.profileImage) // avoid the app icon download if the app already has an icon
+        {
+            [self startUserProfileImageDownload:user forIndexPath:indexPath];
+        }
+    }
+    
+}
+
+
+
+#pragma scroll view delegate
+
+// Load images for all onscreen rows when scrolling is finished
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+	{
+        [self loadImagesForOnscreenRows];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self loadImagesForOnscreenRows];
+}
+
 
 @end
